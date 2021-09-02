@@ -1,6 +1,11 @@
 import java.util.*;
 
 public class Puissance {
+    static Scanner scanner = new Scanner(System.in);
+
+    static ArrayList<String> tokens = new ArrayList<>(Arrays.asList("⚪", "⬜"));
+    static ArrayList<String> winTokens = new ArrayList<>(Arrays.asList("🔴", "🟥"));
+
     static ArrayList<String> alphabet = new ArrayList<>(Arrays.asList("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"));
     static ArrayList<ArrayList<String>> grid;
 
@@ -66,12 +71,43 @@ public class Puissance {
         return tokenPlayed;
     }
 
+    private static void checkAllWinInGrid() {
+        // check colonne
+        for(int i = 0; i < grid.size(); i++) {
+            String stringColumn = String.join(",", grid.get(i));
+
+            for(int j = 0; j < tokens.size(); j++) {
+                stringColumn = stringColumn.replaceAll(tokens.get(j) + "," + tokens.get(j) + "," + tokens.get(j) + "," + tokens.get(j), winTokens.get(j) + "," + winTokens.get(j) + "," + winTokens.get(j) + "," + winTokens.get(j));
+            }
+
+            grid.set(i, new ArrayList<>(Arrays.asList(stringColumn.split(","))));
+        }
+    }
+
     public static void main(String[] args) {
-        generateGrid(20);
+        System.out.println("Bonjour, bienvenue au jeu du Morpion pour les étudiants qui s'ennuie vraiment en amphi");
+        System.out.print("Veuillez definer la taille de la grille entre 4 et 20 : ");
+        int gridSizeInput = Integer.parseInt(scanner.nextLine());
 
-        Map<String, Integer> temp = getColumnAndLineFromUserInput("E5");
+        generateGrid(gridSizeInput);
 
-        addToken(temp.get("column"), temp.get("line"), "O");
-        printGrid();
+        int player = 0;
+        boolean end = false;
+        String playerInput;
+
+        do {
+            checkAllWinInGrid();
+            printGrid();
+
+            System.out.print("Joueur " + (player+1) + " (" + tokens.get(player) + ") > ");
+            playerInput = scanner.nextLine().toUpperCase();
+            if(playerInput.equalsIgnoreCase("fin")) end = true;
+            else {
+                Map<String, Integer> playerPosition = getColumnAndLineFromUserInput(playerInput);
+                addToken(playerPosition.get("column"), playerPosition.get("line"), tokens.get(player));
+                if(player == 0) player = 1;
+                else player = 0;
+            }
+        } while (!end);
     }
 }
