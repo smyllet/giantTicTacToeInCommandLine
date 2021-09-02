@@ -7,7 +7,7 @@ public class Puissance {
     static ArrayList<String> winTokens = new ArrayList<>(Arrays.asList("🔴", "🟥"));
 
     static ArrayList<String> alphabet = new ArrayList<>(Arrays.asList("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"));
-    static ArrayList<ArrayList<String>> grid;
+    static ArrayList<ArrayList<Integer>> grid;
 
     private static void generateGrid(int sizeOfGrid) {
         if(sizeOfGrid > 20) sizeOfGrid = 20;
@@ -16,12 +16,17 @@ public class Puissance {
         grid = new ArrayList<>();
 
         for(int i = 0; i < sizeOfGrid; i++) {
-            ArrayList<String> column = new ArrayList<>();
+            ArrayList<Integer> column = new ArrayList<>();
             for(int j = 0; j < sizeOfGrid; j++) {
-                column.add(" ");
+                column.add(0);
             }
             grid.add(column);
         }
+    }
+
+    private static String getStringCharForBoxMap(Integer box) {
+        if(box == 0) return " ";
+        else return tokens.get((box/1000)-1);
     }
 
     private static void printGrid() {
@@ -38,9 +43,9 @@ public class Puissance {
             } else stringLineArray.add(alphabet.get(i-1) + " |");
         }
 
-        for(ArrayList<String> column : grid) {
+        for(ArrayList<Integer> column : grid) {
             for(int i = 0; i < column.size() ; i++) {
-                stringLineArray.set(i+1, stringLineArray.get(i+1) + " " + column.get(i) + " |");
+                stringLineArray.set(i+1, stringLineArray.get(i+1) + " " + getStringCharForBoxMap(column.get(i)) + " |");
             }
         }
 
@@ -58,12 +63,12 @@ public class Puissance {
         return columnAndLine;
     }
 
-    private static boolean addToken(int columnNumber, int lineNumber, String token) {
+    private static boolean addToken(int columnNumber, int lineNumber, int player) {
         boolean tokenPlayed = false;
 
         if(columnNumber < grid.size() && columnNumber >= 0 && lineNumber < grid.size() && lineNumber >= 0) {
-            if(grid.get(columnNumber).get(lineNumber).equals(" ")) {
-                grid.get(columnNumber).set(lineNumber, token);
+            if(grid.get(columnNumber).get(lineNumber) == 0) {
+                grid.get(columnNumber).set(lineNumber, player*1000);
                 tokenPlayed = true;
             }
         }
@@ -71,6 +76,7 @@ public class Puissance {
         return tokenPlayed;
     }
 
+    /*
     private static void checkAllWinInGrid() {
         // check colonne
         for(int i = 0; i < grid.size(); i++) {
@@ -83,6 +89,7 @@ public class Puissance {
             grid.set(i, new ArrayList<>(Arrays.asList(stringColumn.split(","))));
         }
     }
+     */
 
     public static void main(String[] args) {
         System.out.println("Bonjour, bienvenue au jeu du Morpion pour les étudiants qui s'ennuie vraiment en amphi");
@@ -91,22 +98,23 @@ public class Puissance {
 
         generateGrid(gridSizeInput);
 
-        int player = 0;
+        int player = 1;
         boolean end = false;
         String playerInput;
 
         do {
-            checkAllWinInGrid();
+            // checkAllWinInGrid();
             printGrid();
 
-            System.out.print("Joueur " + (player+1) + " (" + tokens.get(player) + ") > ");
+            System.out.print("Joueur " + (player) + " (" + tokens.get(player-1) + ") > ");
             playerInput = scanner.nextLine().toUpperCase();
             if(playerInput.equalsIgnoreCase("fin")) end = true;
             else {
                 Map<String, Integer> playerPosition = getColumnAndLineFromUserInput(playerInput);
-                addToken(playerPosition.get("column"), playerPosition.get("line"), tokens.get(player));
-                if(player == 0) player = 1;
-                else player = 0;
+                if(addToken(playerPosition.get("column"), playerPosition.get("line"), player)) {
+                    if(player == 1) player = 2;
+                    else player = 1;
+                } else System.out.println("Case déjà occupé, veuillez saisir une autres case");
             }
         } while (!end);
     }
