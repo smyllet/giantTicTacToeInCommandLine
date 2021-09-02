@@ -3,7 +3,7 @@ import java.util.*;
 public class Game {
     static Scanner scanner = new Scanner(System.in);
 
-    static ArrayList<String> tokens = new ArrayList<>(Arrays.asList("X", "O"));
+    static ArrayList<String> tokens = new ArrayList<>();
 
     static ArrayList<String> alphabet = new ArrayList<>(Arrays.asList("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"));
     static ArrayList<ArrayList<Integer>> grid;
@@ -179,10 +179,52 @@ public class Game {
         }
     }
 
+    public static int inputInt(int minValue, int maxValue, String prompt) {
+        boolean valideInput = false;
+        String userInput;
+        int numberToReturn = 0;
+
+        do {
+            System.out.print(prompt);
+            userInput = scanner.nextLine();
+
+            try {
+                numberToReturn = Integer.parseInt(userInput);
+                if(numberToReturn >= minValue && numberToReturn <= maxValue) valideInput = true;
+            } catch (Exception ignored){}
+
+            if(!valideInput) System.out.println("Erreur de saisie, vous devez saisir un nombre entre " + minValue + " et " + maxValue);
+        } while (!valideInput);
+
+        return numberToReturn;
+    }
+
     public static void main(String[] args) {
         System.out.println("Bonjour, bienvenue au jeu du Morpion pour les étudiants qui s'ennuie vraiment en amphi");
-        System.out.print("Veuillez definer la taille de la grille entre 4 et 20 : ");
-        int gridSizeInput = Integer.parseInt(scanner.nextLine());
+
+        int numberOfPlayer = inputInt(2, 6, "Veuillez saisir le nombre de joueur (2-6) : ");
+
+
+        for(int i = 1; i <= numberOfPlayer; i++) {
+            String token;
+            boolean valideInput = false;
+
+            System.out.println("Saisie des jetons des joueurs");
+
+            do {
+                System.out.print("Caractère joueur " + i + " : ");
+                token = scanner.nextLine();
+                if(token.length() == 1) {
+                    if(!tokens.contains(token)) {
+                        tokens.add(token);
+                        valideInput = true;
+                    }
+                    else System.out.println("Ce caractère est déjà utilisé par un autre joueur");
+                } else System.out.println("Veuillez saisir un seul caractère");
+            } while (!valideInput);
+        }
+
+        int gridSizeInput = inputInt(numberOfPlayer+2, 20, "Veuillez definer la taille de la grille (" + (numberOfPlayer+2) + "-20) : ");
 
         generateGrid(gridSizeInput);
 
