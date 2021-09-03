@@ -4,6 +4,7 @@ public class Game {
     static Scanner scanner = new Scanner(System.in);
 
     static ArrayList<String> tokens = new ArrayList<>();
+    static ArrayList<Integer> points = new ArrayList<>();
 
     static ArrayList<String> alphabet = new ArrayList<>(Arrays.asList("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"));
     static ArrayList<ArrayList<Integer>> grid;
@@ -32,8 +33,9 @@ public class Game {
         }
     }
 
-    private static void printGrid() {
+    private static void printGrid(int player) {
         ArrayList<String> stringLineArray = new ArrayList<>();
+        ArrayList<String> scoreBoardArray = new ArrayList<>();
 
         for (int i = 0; i <= grid.size(); i++) {
             if(i == 0) {
@@ -52,7 +54,18 @@ public class Game {
             }
         }
 
-        for(String lineToPrint : stringLineArray) {
+        scoreBoardArray.add("Tableau des scores");
+        scoreBoardArray.add("");
+        for(int i = 0; i < points.size(); i++) {
+            scoreBoardArray.add(((player == i+1) ? "\u001B[32m" : "") + "Joueur " + (i+1) + " (" + tokens.get(i) + ") : " + points.get(i) + "\u001B[0m");
+        }
+
+        int spaceUp = (stringLineArray.size()-scoreBoardArray.size())/2;
+        for(int i = 0; i < stringLineArray.size(); i++) {
+            String lineToPrint = stringLineArray.get(i);
+
+            if(i >= spaceUp && i < (scoreBoardArray.size()+spaceUp)) lineToPrint += "          " + scoreBoardArray.get(i-spaceUp);
+
             System.out.println(lineToPrint);
         }
     }
@@ -117,6 +130,7 @@ public class Game {
         for(int i = 0; i < grid.size(); i++) {
             if(stringChecker.charAt(i) == 'X') grid.get(columnNumber).set(i, grid.get(columnNumber).get(i)+1);
         }
+        if(stringChecker.toString().contains("X")) points.set(player-1, points.get(player-1)+1);
 
         // Check ligne
         stringChecker = new StringBuilder();
@@ -137,6 +151,7 @@ public class Game {
                 }
             }
         }
+        if(stringChecker.toString().contains("X")) points.set(player-1, points.get(player-1)+1);
 
         // Check Diagonale Haut Bas
         stringChecker = new StringBuilder();
@@ -157,6 +172,7 @@ public class Game {
                 }
             }
         }
+        if(stringChecker.toString().contains("X")) points.set(player-1, points.get(player-1)+1);
 
         // Check Diagonale Bas Haut
         stringChecker = new StringBuilder();
@@ -177,6 +193,7 @@ public class Game {
                 }
             }
         }
+        if(stringChecker.toString().contains("X")) points.set(player-1, points.get(player-1)+1);
     }
 
     public static int inputInt(int minValue, int maxValue, String prompt) {
@@ -217,6 +234,7 @@ public class Game {
                 if(token.length() == 1) {
                     if(!tokens.contains(token)) {
                         tokens.add(token);
+                        points.add(0);
                         valideInput = true;
                     }
                     else System.out.println("Ce caractère est déjà utilisé par un autre joueur");
@@ -233,8 +251,7 @@ public class Game {
         String playerInput;
 
         do {
-            // checkAllWinInGrid();
-            printGrid();
+            printGrid(player);
 
             System.out.print("Joueur " + (player) + " (" + tokens.get(player-1) + ") > ");
             playerInput = scanner.nextLine().toUpperCase();
