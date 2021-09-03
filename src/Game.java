@@ -249,6 +249,7 @@ public class Game {
         int player = 1;
         boolean end = false;
         String playerInput;
+        int totalPlayerTurn = 0;
 
         do {
             printGrid(player);
@@ -260,10 +261,25 @@ public class Game {
                 Map<String, Integer> playerPosition = getColumnAndLineFromUserInput(playerInput);
                 if(addToken(playerPosition.get("column"), playerPosition.get("line"), player)) {
                     checkWin(playerPosition.get("column"), playerPosition.get("line"));
+
+                    totalPlayerTurn++;
+
                     if(player == tokens.size()) player = 1;
                     else player++;
                 } else System.out.println("Case déjà occupé, veuillez saisir une autres case");
             }
-        } while (!end);
+        } while (!end && totalPlayerTurn < Math.pow(grid.size(),2));
+
+        System.out.println(" - - - - - Fin de partie - - - - - ");
+        printGrid(0);
+        int winnerIndex = 0;
+        int winnerPoint = 0;
+        for(int i = 0; i < points.size(); i++) {
+            if(points.get(i) >= winnerPoint) {
+                winnerIndex = i;
+                winnerPoint = points.get(i);
+            }
+        }
+        if(winnerPoint > 0) System.out.println("Félicitation au joueur " + (winnerIndex+1) + " (" + tokens.get(winnerIndex) + ") qui gagne avec " + winnerPoint + " point(s)");
     }
 }
