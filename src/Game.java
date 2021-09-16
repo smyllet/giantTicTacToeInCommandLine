@@ -42,15 +42,15 @@ public class Game {
         do {
             Player actualPlayer = playerList.get(player-1);
 
-            System.out.println(Utils.getStringGrid(grid, playerList, actualPlayer, false));
+            System.out.println(Traitement.getStringGrid(grid, playerList, actualPlayer, false));
 
             playerInput = Utils.inputString("Joueur " + (player) + " (" + actualPlayer.getToken() + ") > ").toUpperCase();
 
             if(playerInput.equalsIgnoreCase("fin")) end = true;
             else {
                 try {
-                    int x = Utils.getXFromUserInput(playerInput);
-                    int y = Utils.getYFromUserInput(playerInput);
+                    int x = Traitement.getXFromUserInput(playerInput);
+                    int y = Traitement.getYFromUserInput(playerInput);
 
                     if(grid.play(actualPlayer, x, y)) {
                         totalPlayerTurn++;
@@ -72,8 +72,8 @@ public class Game {
 
         System.out.println(" - - - - - Fin de partie - - - - - ");
         if(winner.getPoint() > 0) {
-            System.out.println(Utils.getStringGrid(grid, playerList, winner, true));
+            System.out.println(Traitement.getStringGrid(grid, playerList, winner, true));
             System.out.println("Félicitation au joueur " + (winner.getNumber()) + " (" + winner.getToken() + ") qui gagne avec " + winner.getPoint() + " point(s)");
-        } else System.out.println(Utils.getStringGrid(grid, playerList));
+        } else System.out.println(Traitement.getStringGrid(grid, playerList));
     }
 }
