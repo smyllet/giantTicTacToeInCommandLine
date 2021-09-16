@@ -26,10 +26,12 @@ public class Player {
     }
 
     public void addPoint(int point) {
-        this.point += point;
+        if(this.point + point >= 0) this.point += point;
+        else this.point = 0;
     }
 
     public void removePoint(int point) {
-        this.point -= point;
+        if(this.point - point >= 0) this.point -= point;
+        else this.point = 0;
     }
 }
