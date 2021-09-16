@@ -14,7 +14,7 @@ public class Traitement {
     public static int getYFromUserInput(String userInput) throws Exception {
         if(userInput.length() > 1) {
             try {
-                int y = Utils.alphabet.indexOf(userInput.substring(0,1));
+                int y = userInput.charAt(0) - 'A';
                 if(y != -1) return y;
                 else throw new Exception();
             } catch (Exception e) {
@@ -23,9 +23,17 @@ public class Traitement {
         } else throw new Exception();
     }
 
+    public static String getStringBox(Box box) {
+        if(box.getPlayer() == null) return " ";
+        else if(box.isLineConsommation() || box.isColumnConsommation() || box.isDiagUpDownConsommation() || box.isDiagDownUpConsommation()) return "\u001B[36m" + box.getPlayer().getToken() + "\u001B[0m";
+        else return "\u001B[31m" + box.getPlayer().getToken() + "\u001B[0m";
+    }
+
     public static String getStringGrid(Grid grid, ArrayList<Player> playerList, Player highLightPlayer, boolean win) {
         ArrayList<String> stringLineArray = new ArrayList<>();
         ArrayList<String> scoreBoardArray = new ArrayList<>();
+
+        char c = 'A';
 
         for (int i = 0; i <= grid.getSize(); i++) {
             if(i == 0) {
@@ -35,12 +43,15 @@ public class Traitement {
                     else firstLine.append(" ").append(j).append(" ");
                 }
                 stringLineArray.add(firstLine.toString());
-            } else stringLineArray.add(Utils.alphabet.get(i-1) + " |");
+            } else {
+                stringLineArray.add(c + " |");
+                c++;
+            }
         }
 
         for(ArrayList<Box> column : grid.getBoxList()) {
             for(int i = 0; i < column.size() ; i++) {
-                stringLineArray.set(i+1, stringLineArray.get(i+1) + " " + ((column.get(i).getPlayer() != null) ? column.get(i).toString() : " ") + " |");
+                stringLineArray.set(i+1, stringLineArray.get(i+1) + " " + ((column.get(i).getPlayer() != null) ? getStringBox(column.get(i)) : " ") + " |");
             }
         }
 

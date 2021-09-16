@@ -1,10 +1,7 @@
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Utils {
     static Scanner scanner = new Scanner(System.in);
-    public static final ArrayList<String> alphabet = new ArrayList<>(Arrays.asList("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"));
 
     public static int inputInt(int minValue, int maxValue, String prompt) {
         boolean valideInput = false;

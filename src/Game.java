@@ -1,19 +1,15 @@
 import java.util.*;
 
 public class Game {
-    static Grid grid;
-
-    static ArrayList<Player> playerList;
-
-    public static void main(String[] args) {
+    public void startGame() {
         System.out.println("Bonjour, bienvenue au jeu du Morpion pour les étudiants qui s'ennuie vraiment en amphi");
 
         int numberOfPlayer = Utils.inputInt(2, 6, "Veuillez saisir le nombre de joueur (2-6) : ");
-        playerList = new ArrayList<>();
+        ArrayList<Player> playerList = new ArrayList<>();
 
         int gridSizeInput = Utils.inputInt(numberOfPlayer+2, 20, "Veuillez definer la taille de la grille (" + (numberOfPlayer+2) + "-20) : ");
 
-        grid = new Grid(gridSizeInput);
+        Grid grid = new Grid(gridSizeInput);
 
         for(int i = 1; i <= numberOfPlayer; i++) {
             String token;

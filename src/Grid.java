@@ -25,7 +25,7 @@ public class Grid {
             if(boxList.get(x).get(y).getPlayer() == null) {
                 boxList.get(x).get(y).setPlayer(player);
                 tokenPlayed = true;
-                checkWin(x, y);
+                checkWinAndConsumes(x, y);
             }
         }
 
@@ -36,7 +36,7 @@ public class Grid {
         return (int) (Math.pow(boxList.size(),2));
     }
 
-    private void checkWin(int x, int y) {
+    private void checkWinAndConsumes(int x, int y) {
         Player player = this.boxList.get(x).get(y).getPlayer();
 
         // check colonne

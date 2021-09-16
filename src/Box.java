@@ -52,11 +52,4 @@ public class Box {
     public boolean isDiagDownUpConsommation() {
         return diagDownUpConsommation;
     }
-
-    @Override
-    public String toString() {
-        if(this.player == null) return " ";
-        else if(isLineConsommation() || isColumnConsommation() || isDiagUpDownConsommation() || isDiagDownUpConsommation()) return "\u001B[36m" + player.getToken() + "\u001B[0m";
-        else return "\u001B[31m" + player.getToken() + "\u001B[0m";
-    }
 }
