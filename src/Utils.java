@@ -28,8 +28,9 @@ public class Utils {
         } else throw new Exception();
     }
 
-    public static String getStringGrid(Grid grid) {
+    public static String getStringGrid(Grid grid, ArrayList<Player> playerList, Player highLightPlayer, boolean win) {
         ArrayList<String> stringLineArray = new ArrayList<>();
+        ArrayList<String> scoreBoardArray = new ArrayList<>();
 
         for (int i = 0; i <= grid.getSize(); i++) {
             if(i == 0) {
@@ -48,8 +49,26 @@ public class Utils {
             }
         }
 
+        scoreBoardArray.add("Tableau des scores");
+        scoreBoardArray.add("");
+        for(Player player : playerList) {
+            scoreBoardArray.add(((player == highLightPlayer) ? ((win) ? "\u001B[35m" : "\u001B[32m") : "") + "Joueur " + (player.getNumber()) + " (" + player.getToken() + ") : " + player.getPoint() + "\u001B[0m");
+        }
+        int spaceUp = (stringLineArray.size()-scoreBoardArray.size())/2;
+
+        for(int i = 0; i < stringLineArray.size(); i++) {
+            String lineToPrint = stringLineArray.get(i);
+
+            if(i >= spaceUp && i < (scoreBoardArray.size()+spaceUp)) stringLineArray.set(i, lineToPrint + "          " + scoreBoardArray.get(i-spaceUp));
+        }
+
         return String.join("\n", stringLineArray);
     }
+
+    public static String getStringGrid(Grid grid, ArrayList<Player> playerList) {
+        return getStringGrid(grid, playerList, null, false);
+    }
+
     public static int inputInt(int minValue, int maxValue, String prompt) {
         boolean valideInput = false;
         String userInput;

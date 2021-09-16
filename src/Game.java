@@ -40,9 +40,9 @@ public class Game {
         int totalPlayerTurn = 0;
 
         do {
-            System.out.println(Utils.getStringGrid(grid));
-
             Player actualPlayer = playerList.get(player-1);
+
+            System.out.println(Utils.getStringGrid(grid, playerList, actualPlayer, false));
 
             playerInput = Utils.inputString("Joueur " + (player) + " (" + actualPlayer.getToken() + ") > ").toUpperCase();
 
@@ -64,7 +64,16 @@ public class Game {
             }
         } while (!end && totalPlayerTurn < grid.getTotalNbBox());
 
+        Player winner = playerList.get(0);
+
+        for(Player p : playerList) {
+            if(p.getPoint() >= winner.getPoint()) winner = p;
+        }
+
         System.out.println(" - - - - - Fin de partie - - - - - ");
-        System.out.println(Utils.getStringGrid(grid));
+        if(winner.getPoint() > 0) {
+            System.out.println(Utils.getStringGrid(grid, playerList, winner, true));
+            System.out.println("Félicitation au joueur " + (winner.getNumber()) + " (" + winner.getToken() + ") qui gagne avec " + winner.getPoint() + " point(s)");
+        } else System.out.println(Utils.getStringGrid(grid, playerList));
     }
 }
