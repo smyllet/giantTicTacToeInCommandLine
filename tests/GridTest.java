@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class GridOfTest extends Grid {
     GridOfTest(int size) {
@@ -85,19 +86,24 @@ public class GridTest {
 
     @Test
     final void play() {
-        assertEquals("........\n........\n........\n........\n........\n........\n........\n........", gridOfSize8.toString());
+        try {
+            assertEquals("........\n........\n........\n........\n........\n........\n........\n........", gridOfSize8.toString());
 
-        gridOfSize8.play(player1, 2, 3);
-        assertEquals("........\n........\n........\n..X.....\n........\n........\n........\n........", gridOfSize8.toString());
+            gridOfSize8.play(player1, 2, 3);
+            assertEquals("........\n........\n........\n..X.....\n........\n........\n........\n........", gridOfSize8.toString());
 
-        gridOfSize8.play(player2, 5, 6);
-        assertEquals("........\n........\n........\n..X.....\n........\n........\n.....O..\n........", gridOfSize8.toString());
+            gridOfSize8.play(player2, 5, 6);
+            assertEquals("........\n........\n........\n..X.....\n........\n........\n.....O..\n........", gridOfSize8.toString());
 
-        gridOfSize8.parse("...X...O\n...O....\n........\n..XXX...\n........\n........\n.....O..\n........", new ArrayList<>(Arrays.asList(player1, player2)));
-        assertEquals("...X...O\n...O....\n........\n..XXX...\n........\n........\n.....O..\n........", gridOfSize8.toString());
+            gridOfSize8.parse("...X...O\n...O....\n........\n..XXX...\n........\n........\n.....O..\n........", new ArrayList<>(Arrays.asList(player1, player2)));
+            assertEquals("...X...O\n...O....\n........\n..XXX...\n........\n........\n.....O..\n........", gridOfSize8.toString());
 
-        gridOfSize8.parse("........\n........\n........\n..XXX...\n........\n........\n........\n........", new ArrayList<>(Arrays.asList(player1, player2)));
-        gridOfSize8.play(player1, 5, 3);
-        assertEquals("........\n........\n........\n..XXXX..\n........\n........\n........\n........", gridOfSize8.toString());
+            gridOfSize8.parse("........\n........\n........\n..XXX...\n........\n........\n........\n........", new ArrayList<>(Arrays.asList(player1, player2)));
+            gridOfSize8.play(player1, 5, 3);
+            assertEquals("........\n........\n........\n..XXXX..\n........\n........\n........\n........", gridOfSize8.toString());
+
+        } catch (Exception e) {
+            fail();
+        }
     }
 }

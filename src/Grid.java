@@ -1,3 +1,5 @@
+import exception.*;
+
 import java.util.ArrayList;
 
 public class Grid {
@@ -18,104 +20,110 @@ public class Grid {
         }
     }
 
-    public boolean play(Player player, int x, int y) {
-        boolean tokenPlayed = false;
-
+    public void play(Player player, int x, int y) throws BoxOutOfRangeException, BoxAlreadyPlayedException, NegativePointParameterException, CheckWinInvalideDataException {
         if(x < boxList.size() && x >= 0 && y < boxList.size() && y >= 0) {
             if(boxList.get(x).get(y).getPlayer() == null) {
                 boxList.get(x).get(y).setPlayer(player);
-                tokenPlayed = true;
-                player.addPoint(checkWinAndConsumes(x, y));
-            }
-        }
-
-        return tokenPlayed;
+                int point = checkWinAndConsumes(x, y);
+                player.addPoint(point);
+            } else throw new BoxAlreadyPlayedException();
+        } else throw new BoxOutOfRangeException();
     }
 
     public int getTotalNbBox() {
         return (int) (Math.pow(boxList.size(),2));
     }
 
-    private int checkWinAndConsumes(int x, int y) {
-        Player player = this.boxList.get(x).get(y).getPlayer();
+    private int checkWinAndConsumes(int x, int y) throws BoxOutOfRangeException, CheckWinInvalideDataException {
+        Player player;
+
+        try {
+            player = this.boxList.get(x).get(y).getPlayer();
+        } catch (IndexOutOfBoundsException e) {
+            throw new BoxOutOfRangeException();
+        }
         int points = 0;
 
-        // check colonne
-        StringBuilder stringChecker = new StringBuilder();
-        for(Box box : this.boxList.get(x)) {
-            if(box.getPlayer() == player && !box.isColumnConsommation()) stringChecker.append("#");
-            else stringChecker.append(" ");
-        }
-        stringChecker = new StringBuilder(stringChecker.toString().replace("####", "XXXX"));
-        for(int i = 0; i < this.boxList.size(); i++) {
-            if(stringChecker.charAt(i) == 'X') this.boxList.get(x).get(i).consumeColumn();
-        }
-        if(stringChecker.toString().contains("X")) points++;
-
-        // Check ligne
-        stringChecker = new StringBuilder();
-        for(ArrayList<Box> column : this.boxList) {
+        try {
+            // check colonne
+            StringBuilder stringChecker = new StringBuilder();
+            for(Box box : this.boxList.get(x)) {
+                if(box.getPlayer() == player && !box.isColumnConsommation()) stringChecker.append("#");
+                else stringChecker.append(" ");
+            }
+            stringChecker = new StringBuilder(stringChecker.toString().replace("####", "XXXX"));
             for(int i = 0; i < this.boxList.size(); i++) {
-                if(i == y) {
-                    Box box = column.get(i);
-                    if(box.getPlayer() == player && !box.isLineConsommation()) stringChecker.append("#");
-                    else stringChecker.append(" ");
-                }
+                if(stringChecker.charAt(i) == 'X') this.boxList.get(x).get(i).consumeColumn();
             }
-        }
-        stringChecker = new StringBuilder(stringChecker.toString().replace("####", "XXXX"));
-        for(int i = 0; i < this.boxList.size(); i++) {
-            for(int j = 0; j < this.boxList.size(); j++) {
-                if(j == y) {
-                    if(stringChecker.charAt(i) == 'X') this.boxList.get(i).get(j).consumeLine();
-                }
-            }
-        }
-        if(stringChecker.toString().contains("X")) points++;
+            if(stringChecker.toString().contains("X")) points++;
 
-        // Check Diagonale Haut Bas
-        stringChecker = new StringBuilder();
-        for(int i = 0; i < this.boxList.size(); i++) {
-            stringChecker.append(" ");
-            for(int j = 0; j < this.boxList.size(); j++) {
-                if(j == (y+(i-x)) || j == (y-(x-i)) || ((i == x) && (j == y))) {
-                    Box box = this.boxList.get(i).get(j);
-                    if(box.getPlayer() == player && !box.isDiagUpDownConsommation()) stringChecker.setCharAt(i, '#');
+            // Check ligne
+            stringChecker = new StringBuilder();
+            for(ArrayList<Box> column : this.boxList) {
+                for(int i = 0; i < this.boxList.size(); i++) {
+                    if(i == y) {
+                        Box box = column.get(i);
+                        if(box.getPlayer() == player && !box.isLineConsommation()) stringChecker.append("#");
+                        else stringChecker.append(" ");
+                    }
                 }
             }
-        }
-        stringChecker = new StringBuilder(stringChecker.toString().replace("####", "XXXX"));
-        for(int i = 0; i < this.boxList.size(); i++) {
-            for(int j = 0; j < this.boxList.size(); j++) {
-                if(((i < x) && (j == (y+(i-x)))) || ((i > x) && (j == y-(x-i))) || ((i == x) && (j == y))) {
-                    if(stringChecker.charAt(i) == 'X') this.boxList.get(i).get(j).consumeDiagUpDown();
+            stringChecker = new StringBuilder(stringChecker.toString().replace("####", "XXXX"));
+            for(int i = 0; i < this.boxList.size(); i++) {
+                for(int j = 0; j < this.boxList.size(); j++) {
+                    if(j == y) {
+                        if(stringChecker.charAt(i) == 'X') this.boxList.get(i).get(j).consumeLine();
+                    }
                 }
             }
-        }
-        if(stringChecker.toString().contains("X")) points++;
+            if(stringChecker.toString().contains("X")) points++;
 
-        // Check Diagonale Bas Haut
-        stringChecker = new StringBuilder();
-        for(int i = 0; i < this.boxList.size(); i++) {
-            stringChecker.append(" ");
-            for(int j = 0; j < this.boxList.size(); j++) {
-                if(j == (y-(i-x)) || j == (y+(x-i)) || ((i == x) && (j == y))) {
-                    Box box = this.boxList.get(i).get(j);
-                    if(box.getPlayer() == player && !box.isDiagDownUpConsommation()) stringChecker.setCharAt(i,'#');
+            // Check Diagonale Haut Bas
+            stringChecker = new StringBuilder();
+            for(int i = 0; i < this.boxList.size(); i++) {
+                stringChecker.append(" ");
+                for(int j = 0; j < this.boxList.size(); j++) {
+                    if(j == (y+(i-x)) || j == (y-(x-i)) || ((i == x) && (j == y))) {
+                        Box box = this.boxList.get(i).get(j);
+                        if(box.getPlayer() == player && !box.isDiagUpDownConsommation()) stringChecker.setCharAt(i, '#');
+                    }
                 }
             }
-        }
-        stringChecker = new StringBuilder(stringChecker.toString().replace("####", "XXXX"));
-        for(int i = 0; i < this.boxList.size(); i++) {
-            for(int j = 0; j < this.boxList.size(); j++) {
-                if(j == (y-(i-x)) || j == (y+(x-i)) || ((i == x) && (j == y))) {
-                    if(stringChecker.charAt(i) == 'X') this.boxList.get(i).get(j).consumeDiagDownUp();
+            stringChecker = new StringBuilder(stringChecker.toString().replace("####", "XXXX"));
+            for(int i = 0; i < this.boxList.size(); i++) {
+                for(int j = 0; j < this.boxList.size(); j++) {
+                    if(((i < x) && (j == (y+(i-x)))) || ((i > x) && (j == y-(x-i))) || ((i == x) && (j == y))) {
+                        if(stringChecker.charAt(i) == 'X') this.boxList.get(i).get(j).consumeDiagUpDown();
+                    }
                 }
             }
-        }
-        if(stringChecker.toString().contains("X")) points++;
+            if(stringChecker.toString().contains("X")) points++;
 
-        return points;
+            // Check Diagonale Bas Haut
+            stringChecker = new StringBuilder();
+            for(int i = 0; i < this.boxList.size(); i++) {
+                stringChecker.append(" ");
+                for(int j = 0; j < this.boxList.size(); j++) {
+                    if(j == (y-(i-x)) || j == (y+(x-i)) || ((i == x) && (j == y))) {
+                        Box box = this.boxList.get(i).get(j);
+                        if(box.getPlayer() == player && !box.isDiagDownUpConsommation()) stringChecker.setCharAt(i,'#');
+                    }
+                }
+            }
+            stringChecker = new StringBuilder(stringChecker.toString().replace("####", "XXXX"));
+            for(int i = 0; i < this.boxList.size(); i++) {
+                for(int j = 0; j < this.boxList.size(); j++) {
+                    if(j == (y-(i-x)) || j == (y+(x-i)) || ((i == x) && (j == y))) {
+                        if(stringChecker.charAt(i) == 'X') this.boxList.get(i).get(j).consumeDiagDownUp();
+                    }
+                }
+            }
+            if(stringChecker.toString().contains("X")) points++;
+
+            return points;
+        } catch (Exception e) {
+            throw new CheckWinInvalideDataException();
+        }
     }
 
     public int getSize() {

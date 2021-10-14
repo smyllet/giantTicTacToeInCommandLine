@@ -1,26 +1,28 @@
+import exception.InvalideUserInputException;
+
 import java.util.ArrayList;
 
 public class Traitement {
-    public static int getXFromUserInput(String userInput) throws Exception {
+    public static int getXFromUserInput(String userInput) throws InvalideUserInputException {
         if(userInput.length() > 1) {
             try {
                 return Integer.parseInt(userInput.substring(1))-1;
             } catch (Exception e) {
-                throw new Exception();
+                throw new InvalideUserInputException();
             }
-        } else throw new Exception();
+        } else throw new InvalideUserInputException();
     }
 
-    public static int getYFromUserInput(String userInput) throws Exception {
+    public static int getYFromUserInput(String userInput) throws InvalideUserInputException {
         if(userInput.length() > 1) {
             try {
                 int y = userInput.charAt(0) - 'A';
                 if(y != -1) return y;
-                else throw new Exception();
+                else throw new InvalideUserInputException();
             } catch (Exception e) {
-                throw new Exception();
+                throw new InvalideUserInputException();
             }
-        } else throw new Exception();
+        } else throw new InvalideUserInputException();
     }
 
     public static String getStringBox(Box box) {

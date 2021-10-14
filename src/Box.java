@@ -1,3 +1,6 @@
+import exception.BoxAlreadyConsumedException;
+import exception.BoxNotPlayedException;
+
 public class Box {
     private Player player;
     private boolean lineConsommation;
@@ -21,20 +24,28 @@ public class Box {
         this.player = player;
     }
 
-    public void consumeLine() {
-        if(player != null) lineConsommation = true;
+    public void consumeLine() throws BoxAlreadyConsumedException, BoxNotPlayedException {
+        if(lineConsommation) throw new BoxAlreadyConsumedException();
+        else if(player == null) throw new BoxNotPlayedException();
+        else lineConsommation = true;
     }
 
-    public void consumeColumn() {
-        if(player != null) columnConsommation = true;
+    public void consumeColumn() throws BoxAlreadyConsumedException, BoxNotPlayedException {
+        if(columnConsommation) throw new BoxAlreadyConsumedException();
+        else if(player == null) throw new BoxNotPlayedException();
+        else columnConsommation = true;
     }
 
-    public void consumeDiagUpDown() {
-        if(player != null) diagUpDownConsommation = true;
+    public void consumeDiagUpDown() throws BoxAlreadyConsumedException, BoxNotPlayedException {
+        if(diagUpDownConsommation) throw new BoxAlreadyConsumedException();
+        else if(player == null) throw new BoxNotPlayedException();
+        else diagUpDownConsommation = true;
     }
 
-    public void consumeDiagDownUp() {
-        if(player != null) diagDownUpConsommation = true;
+    public void consumeDiagDownUp() throws BoxAlreadyConsumedException, BoxNotPlayedException {
+        if(diagDownUpConsommation) throw new BoxAlreadyConsumedException();
+        else if(player == null) throw new BoxNotPlayedException();
+        else diagDownUpConsommation = true;
     }
 
     public boolean isLineConsommation() {

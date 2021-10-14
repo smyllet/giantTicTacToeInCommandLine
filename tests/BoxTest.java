@@ -1,3 +1,5 @@
+import exception.BoxAlreadyPlayedException;
+import exception.BoxNotPlayedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,61 +35,61 @@ public class BoxTest {
 
     @Test
     final void consumeLine() {
-        box1.consumeLine();
-        assertTrue(box1.isLineConsommation());
-        assertFalse(box1.isColumnConsommation());
-        assertFalse(box1.isDiagDownUpConsommation());
-        assertFalse(box1.isDiagUpDownConsommation());
+        try {
+            box1.consumeLine();
+            assertTrue(box1.isLineConsommation());
+            assertFalse(box1.isColumnConsommation());
+            assertFalse(box1.isDiagDownUpConsommation());
+            assertFalse(box1.isDiagUpDownConsommation());
+        } catch (Exception e) {
+            fail();
+        }
 
-        box2.consumeLine();
-        assertFalse(box2.isLineConsommation());
-        assertFalse(box2.isColumnConsommation());
-        assertFalse(box2.isDiagDownUpConsommation());
-        assertFalse(box2.isDiagUpDownConsommation());
+        // todo Exception
     }
 
     @Test
     final void consumeColumn() {
-        box1.consumeColumn();
-        assertFalse(box1.isLineConsommation());
-        assertTrue(box1.isColumnConsommation());
-        assertFalse(box1.isDiagDownUpConsommation());
-        assertFalse(box1.isDiagUpDownConsommation());
+        try {
+            box1.consumeColumn();
+            assertFalse(box1.isLineConsommation());
+            assertTrue(box1.isColumnConsommation());
+            assertFalse(box1.isDiagDownUpConsommation());
+            assertFalse(box1.isDiagUpDownConsommation());
+        } catch (Exception e) {
+            fail();
+        }
 
-        box2.consumeColumn();
-        assertFalse(box2.isLineConsommation());
-        assertFalse(box2.isColumnConsommation());
-        assertFalse(box2.isDiagDownUpConsommation());
-        assertFalse(box2.isDiagUpDownConsommation());
+        // todo Exception
     }
 
     @Test
     final void consumeDiagUpDown() {
-        box1.consumeDiagUpDown();
-        assertFalse(box1.isLineConsommation());
-        assertFalse(box1.isColumnConsommation());
-        assertFalse(box1.isDiagDownUpConsommation());
-        assertTrue(box1.isDiagUpDownConsommation());
+        try {
+            box1.consumeDiagUpDown();
+            assertFalse(box1.isLineConsommation());
+            assertFalse(box1.isColumnConsommation());
+            assertFalse(box1.isDiagDownUpConsommation());
+            assertTrue(box1.isDiagUpDownConsommation());
+        } catch (Exception e) {
+            fail();
+        }
 
-        box2.consumeDiagUpDown();
-        assertFalse(box2.isLineConsommation());
-        assertFalse(box2.isColumnConsommation());
-        assertFalse(box2.isDiagDownUpConsommation());
-        assertFalse(box2.isDiagUpDownConsommation());
+        // todo Exception
     }
 
     @Test
     final void consumeDiagDownUp() {
-        box1.consumeDiagDownUp();
-        assertFalse(box1.isLineConsommation());
-        assertFalse(box1.isColumnConsommation());
-        assertTrue(box1.isDiagDownUpConsommation());
-        assertFalse(box1.isDiagUpDownConsommation());
+        try {
+            box1.consumeDiagDownUp();
+            assertFalse(box1.isLineConsommation());
+            assertFalse(box1.isColumnConsommation());
+            assertTrue(box1.isDiagDownUpConsommation());
+            assertFalse(box1.isDiagUpDownConsommation());
+        } catch (Exception e) {
+            fail();
+        }
 
-        box2.consumeDiagDownUp();
-        assertFalse(box2.isLineConsommation());
-        assertFalse(box2.isColumnConsommation());
-        assertFalse(box2.isDiagDownUpConsommation());
-        assertFalse(box2.isDiagUpDownConsommation());
+        // todo Exception
     }
 }

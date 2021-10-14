@@ -1,3 +1,5 @@
+import exception.NegativePointParameterException;
+
 public class Player {
     private final int number;
     private final char token;
@@ -21,17 +23,19 @@ public class Player {
         return point;
     }
 
-    public void setPoint(int point) {
+    public void setPoint(int point) throws NegativePointParameterException {
+        if(point < 0) throw new NegativePointParameterException();
         this.point = point;
     }
 
-    public void addPoint(int point) {
-        if(this.point + point >= 0) this.point += point;
-        else this.point = 0;
+    public void addPoint(int point) throws NegativePointParameterException {
+        if(point < 0) throw new NegativePointParameterException();
+        else this.point += point;
     }
 
-    public void removePoint(int point) {
-        if(this.point - point >= 0) this.point -= point;
+    public void removePoint(int point) throws NegativePointParameterException {
+        if(point < 0) throw new NegativePointParameterException();
+        else if(this.point - point >= 0) this.point -= point;
         else this.point = 0;
     }
 }

@@ -1,8 +1,9 @@
+import exception.NegativePointParameterException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerTest {
     static Player player1, player2, player3, player4;
@@ -17,46 +18,56 @@ public class PlayerTest {
 
     @BeforeEach
     void setUp() {
-        player1.setPoint(3);
-        player2.setPoint(3);
-        player3.setPoint(0);
-        player4.setPoint(4);
+        try {
+            player1.setPoint(3);
+            player2.setPoint(3);
+            player3.setPoint(0);
+            player4.setPoint(4);
+        } catch (Exception e) {
+            fail();
+        }
     }
 
     @Test
     final void addPoint() {
-        player1.addPoint(1);
-        assertEquals(4, player1.getPoint());
+        try {
+            player1.addPoint(1);
+            assertEquals(4, player1.getPoint());
 
-        player2.addPoint(3);
-        assertEquals(6, player2.getPoint());
+            player2.addPoint(3);
+            assertEquals(6, player2.getPoint());
 
-        player3.addPoint(1);
-        assertEquals(1, player3.getPoint());
-        player3.addPoint(1);
-        assertEquals(2, player3.getPoint());
+            player3.addPoint(1);
+            assertEquals(1, player3.getPoint());
+            player3.addPoint(1);
+            assertEquals(2, player3.getPoint());
+        } catch (Exception e) {
+            fail();
+        }
 
-        player4.addPoint(-3);
-        assertEquals(1, player4.getPoint());
-        player4.addPoint(-2);
-        assertEquals(0, player4.getPoint());
+        assertThrows(NegativePointParameterException.class, () -> player4.addPoint(-3));
+        assertEquals(4, player4.getPoint());
     }
 
     @Test
     final void removePoint() {
-        player1.removePoint(1);
-        assertEquals(2, player1.getPoint());
-        player1.removePoint(1);
-        assertEquals(1, player1.getPoint());
+        try {
+            player1.removePoint(1);
+            assertEquals(2, player1.getPoint());
+            player1.removePoint(1);
+            assertEquals(1, player1.getPoint());
 
-        player2.removePoint(2);
-        assertEquals(1, player2.getPoint());
+            player2.removePoint(2);
+            assertEquals(1, player2.getPoint());
 
-        player3.removePoint(1);
-        assertEquals(0, player3.getPoint());
+            player3.removePoint(1);
+            assertEquals(0, player3.getPoint());
 
-        player4.removePoint(4);
-        assertEquals(0, player4.getPoint());
+            player4.removePoint(4);
+            assertEquals(0, player4.getPoint());
+        } catch (Exception e) {
+            fail();
+        }
     }
 
     @Test

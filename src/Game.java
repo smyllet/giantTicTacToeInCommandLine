@@ -1,3 +1,5 @@
+import exception.*;
+
 import java.util.*;
 
 public class Game {
@@ -48,13 +50,26 @@ public class Game {
                     int x = Traitement.getXFromUserInput(playerInput);
                     int y = Traitement.getYFromUserInput(playerInput);
 
-                    if(grid.play(actualPlayer, x, y)) {
+                    try {
+                        grid.play(actualPlayer, x, y);
+
                         totalPlayerTurn++;
 
                         if(player == playerList.size()) player = 1;
                         else player++;
-                    } else System.out.println("Case déjà occupé, veuillez saisir une autres case");
-                } catch (Exception e) {
+                    } catch (BoxOutOfRangeException e) {
+                        System.out.println("Case en dehors de la grille");
+                    } catch (BoxAlreadyPlayedException e) {
+                        System.out.println("Case déjà occupé, veuillez saisir une autres case");
+                    } catch (CheckWinInvalideDataException | NegativePointParameterException e) {
+                        System.out.println("Une erreur est survenue lors de la vérification des points, les points n'ont pas pu être comptabilisé");
+
+                        totalPlayerTurn++;
+
+                        if(player == playerList.size()) player = 1;
+                        else player++;
+                    }
+                } catch (InvalideUserInputException e) {
                     System.out.println("Saisie incorrect");
                 }
             }
