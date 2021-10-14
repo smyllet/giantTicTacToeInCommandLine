@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Grid {
-    private final ArrayList<ArrayList<Box>> boxList;
+    protected ArrayList<ArrayList<Box>> boxList;
 
     Grid(int size) {
         if(size > 20) size = 20;
@@ -25,7 +25,7 @@ public class Grid {
             if(boxList.get(x).get(y).getPlayer() == null) {
                 boxList.get(x).get(y).setPlayer(player);
                 tokenPlayed = true;
-                checkWinAndConsumes(x, y);
+                player.addPoint(checkWinAndConsumes(x, y));
             }
         }
 
@@ -36,8 +36,9 @@ public class Grid {
         return (int) (Math.pow(boxList.size(),2));
     }
 
-    private void checkWinAndConsumes(int x, int y) {
+    private int checkWinAndConsumes(int x, int y) {
         Player player = this.boxList.get(x).get(y).getPlayer();
+        int points = 0;
 
         // check colonne
         StringBuilder stringChecker = new StringBuilder();
@@ -49,7 +50,7 @@ public class Grid {
         for(int i = 0; i < this.boxList.size(); i++) {
             if(stringChecker.charAt(i) == 'X') this.boxList.get(x).get(i).consumeColumn();
         }
-        if(stringChecker.toString().contains("X")) player.addPoint(1);
+        if(stringChecker.toString().contains("X")) points++;
 
         // Check ligne
         stringChecker = new StringBuilder();
@@ -70,7 +71,7 @@ public class Grid {
                 }
             }
         }
-        if(stringChecker.toString().contains("X")) player.addPoint(1);
+        if(stringChecker.toString().contains("X")) points++;
 
         // Check Diagonale Haut Bas
         stringChecker = new StringBuilder();
@@ -91,7 +92,7 @@ public class Grid {
                 }
             }
         }
-        if(stringChecker.toString().contains("X")) player.addPoint(1);
+        if(stringChecker.toString().contains("X")) points++;
 
         // Check Diagonale Bas Haut
         stringChecker = new StringBuilder();
@@ -112,7 +113,9 @@ public class Grid {
                 }
             }
         }
-        if(stringChecker.toString().contains("X")) player.addPoint(1);
+        if(stringChecker.toString().contains("X")) points++;
+
+        return points;
     }
 
     public int getSize() {
